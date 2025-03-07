@@ -1,4 +1,4 @@
-# Guía para Desplegar TalkBuddy en una VPS de Google Cloud Platform
+# Guía para Desplegar ComunicAmi en una VPS de Google Cloud Platform
 
 ## 1. Preparar la Aplicación para Producción
 
@@ -18,7 +18,7 @@ Esto generará una carpeta `dist` con los archivos optimizados para producción.
 2. Ve a "Compute Engine" > "Instancias de VM"
 3. Haz clic en "Crear instancia"
 4. Configura la instancia:
-   - Nombre: `talkbuddy-server`
+   - Nombre: `comunicami-server`
    - Región: Selecciona la más cercana a tus usuarios
    - Tipo de máquina: e2-small (2 vCPU, 2 GB de memoria) es suficiente para empezar
    - Sistema operativo: Debian 11 o Ubuntu 20.04 LTS
@@ -51,7 +51,7 @@ sudo npm install -g pm2
 Crea un archivo de configuración para Nginx:
 
 ```bash
-sudo nano /etc/nginx/sites-available/talkbuddy
+sudo nano /etc/nginx/sites-available/comunicami
 ```
 
 Añade la siguiente configuración:
@@ -60,7 +60,7 @@ Añade la siguiente configuración:
 server {
     listen 80;
     server_name tu-dominio.com www.tu-dominio.com;
-    root /var/www/talkbuddy;
+    root /var/www/comunicami;
     index index.html;
 
     location / {
@@ -72,7 +72,7 @@ server {
 Activa la configuración y reinicia Nginx:
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/talkbuddy /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/comunicami /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl restart nginx
 ```
@@ -86,7 +86,7 @@ Hay varias formas de subir los archivos:
 Desde tu máquina local:
 
 ```bash
-scp -r ./dist/* usuario@IP-DE-TU-VPS:/var/www/talkbuddy/
+scp -r ./dist/* usuario@IP-DE-TU-VPS:/var/www/comunicami/
 ```
 
 ### Opción 2: Usando Git
@@ -98,16 +98,16 @@ En la VPS:
 sudo apt install -y git
 
 # Clonar el repositorio
-git clone https://tu-repositorio.git /tmp/talkbuddy
+git clone https://tu-repositorio.git /tmp/comunicami
 
 # Instalar dependencias y construir
-cd /tmp/talkbuddy
+cd /tmp/comunicami
 npm install
 npm run build
 
 # Mover los archivos construidos
-sudo mkdir -p /var/www/talkbuddy
-sudo cp -r dist/* /var/www/talkbuddy/
+sudo mkdir -p /var/www/comunicami
+sudo cp -r dist/* /var/www/comunicami/
 ```
 
 ## 7. Configurar HTTPS (Recomendado)
@@ -133,18 +133,39 @@ Si tienes un dominio, configura los registros DNS para que apunten a la IP de tu
 1. Crea un registro A que apunte a la IP de tu VPS
 2. Espera a que se propaguen los cambios DNS (puede tomar hasta 48 horas)
 
-## 10. Mantenimiento
+## 10. Actualizar la Aplicación Desplegada con Git
 
-Para actualizar la aplicación en el futuro:
+Para actualizar la aplicación cuando hayas hecho cambios en tu repositorio local:
 
 ```bash
-# Sube los nuevos archivos construidos
-# Luego, si es necesario, reinicia Nginx
+# Conéctate a tu VPS mediante SSH
+ssh usuario@IP-DE-TU-VPS
+
+# Navega al directorio temporal donde clonaste el repositorio
+cd /tmp/comunicami
+
+# Si es la primera vez que actualizas, asegúrate de que el repositorio existe
+# Si no existe, clónalo como se indicó anteriormente
+
+# Si el repositorio ya existe, actualízalo
+git pull origin main  # o el nombre de tu rama principal
+
+# Instala dependencias (por si hay nuevas) y reconstruye
+npm install
+npm run build
+
+# Copia los archivos actualizados al directorio de Nginx
+sudo cp -r dist/* /var/www/comunicami/
+
+# Asegúrate de que los permisos son correctos
+sudo chown -R www-data:www-data /var/www/comunicami/
+
+# Opcionalmente, reinicia Nginx (generalmente no es necesario)
 sudo systemctl restart nginx
 ```
 
 ## Solución de Problemas
 
 - Verifica los logs de Nginx: `sudo tail -f /var/log/nginx/error.log`
-- Asegúrate de que los permisos de archivos sean correctos: `sudo chown -R www-data:www-data /var/www/talkbuddy`
+- Asegúrate de que los permisos de archivos sean correctos: `sudo chown -R www-data:www-data /var/www/comunicami`
 - Verifica el estado de Nginx: `sudo systemctl status nginx`

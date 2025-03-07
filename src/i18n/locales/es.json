@@ -1,9 +1,9 @@
 {
-  "appName": "TalkBuddy",
+  "appName": "ComunicAmi",
   "appDescription": "Una herramienta de comunicación para ayudarte a expresarte",
   "mySentence": "Mi Frase",
   "selectSymbols": "Selecciona símbolos para crear tu frase",
-  "footer": "TalkBuddy AAC - Ayudando a los niños a comunicarse",
+  "footer": "ComunicAmi - Ayudando a los niños a comunicarse",
   "settings": "Configuración",
   "activities": "Actividades",
   "progress": "Mi Progreso",
@@ -17,7 +17,7 @@
   "cancel": "Cancelar",
   "loading": "Cargando...",
   "errorMessage": "Ocurrió un error. Por favor intenta de nuevo.",
-  "welcomeMessage": "¡Bienvenido a TalkBuddy!",
+  "welcomeMessage": "¡Bienvenido a ComunicAmi!",
   "noResults": "No se encontraron resultados",
   "recentlyUsed": "Usados recientemente",
   "favorites": "Favoritos",
@@ -103,7 +103,7 @@
     "fiveDaysStreak": "¡5 Días Seguidos!"
   },
   "tutorial": {
-    "welcome": "¡Bienvenido a TalkBuddy!",
+    "welcome": "¡Bienvenido a ComunicAmi!",
     "step1": "Selecciona símbolos para crear tu frase",
     "step2": "Presiona el botón de hablar para escuchar tu frase",
     "step3": "Usa las categorías para encontrar más símbolos",
